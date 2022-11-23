@@ -12,3 +12,24 @@ jobs:
       - run: npm install -g bats
       - run: bats -v
       - run: echo "Hello World!"
+      - run: echo $MY_SECRET
+      - name: Run script file
+        run: |
+         chmod +x ./run.sh
+        shell: bash
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         password: ${{ secrets.PASSWORD }}
+         port: 22
+         script: echo "Hello World"
+      - name: copy file to remote server
+        uses: garygrossgarten/github-action-scp@release
+        with:
+         local: ./run.sh
+         remote: /home/lekhana/run.sh
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         password: ${{ secrets.PASSWORD }} 
