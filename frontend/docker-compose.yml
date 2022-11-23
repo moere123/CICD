@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  frontend:
+    mem_limit: 128m
+    cpus: 0.1
+
+    restart: unless-stopped
+    image: ukfrontend
+    container_name: frontend
+    env_file: .env
+    depends_on:
+      - backend
+    ports:
+      - 8094:80
+  backend:
+    mem_limit: 512M
+    cpus: 0.3
+
+    restart: unless-stopped
+    image: ukbackend
+    container_name: backend
+    ports:
+      - 8009:8080
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+  db:
+    mem_limit: 128m
+    cpus: 0.05
+
+    restart: unless-stopped
+    image: 'postgres:10-alpine'
+    container_name: db
+    environment:
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_DB: 'postgres'
